@@ -1,24 +1,28 @@
 import numpy as np
 import tensorflow as tf
 import collections
-from konlpy.tag import Twitter
+from konlpy.tag import Okt as Twitter
 import argparse
 import re
 import math
 import random
-
+import time
 '''
     Step 1 : Parse Arguments.
 '''
 parser = argparse.ArgumentParser()
 parser.add_argument("input", type=str, help="input text file for training: one sentence per line")
-parser.add_argument("--embedding_size", type=int, help="embedding vector size (default=150)", default=150)
+# 수정
+parser.add_argument("--embedding_size", type=int, help="embedding vector size (default=150)", default=300)
 parser.add_argument("--window_size", type=int, help="window size (default=5)", default=5)
 parser.add_argument("--min_count", type=int, help="minimal number of word occurences (default=5)", default=5)
 parser.add_argument("--num_sampled", type=int, help="number of negatives sampled (default=50)", default=50)
 parser.add_argument("--learning_rate", type=float, help="learning rate (default=1.0)", default=1.0)
 parser.add_argument("--sampling_rate", type=int, help="rate for subsampling frequent words (default=0.0001)", default=0.0001)
-parser.add_argument("--epochs", type=int, help="number of epochs (default=3)", default=3)
+
+parser.add_argument("--epochs", type=int, help="number of epochs (default=4)", default=4)
+
+# batch_size를 어떻게 해야할까.
 parser.add_argument("--batch_size", type=int, help="batch size (default=150)", default=150)
 
 args = parser.parse_args()
@@ -32,7 +36,9 @@ def build_dataset(train_text, min_count, sampling_rate):
     with open(train_text, 'r') as f:
         lines = f.readlines()
         for line in lines:
+            #  line -> line.split('\t')[1]
             sentence = re.sub(r"[^ㄱ-힣a-zA-Z0-9]+", ' ', line).strip().split()
+            # sentence = re.sub(r"[^ㄱ-힣a-zA-Z0-9]+", ' ', line.split('\t')[1]).strip().split()
             if sentence:
                 words.append(sentence)
 
@@ -269,19 +275,19 @@ with tf.Session(graph=graph) as session:
             pos_embed = pos_embeddings.eval()
 
             # Print nearest words
-            sim = similarity.eval()
-            for i in range(valid_size):
-                valid_pos = pos_reverse_dict[valid_examples[i]]
-                top_k = 8
-                nearest = (-sim[i, :]).argsort()[1:top_k + 1]
-                log_str = 'Nearest to %s:' % str(valid_pos)
-                for k in range(top_k):
-                    close_word = pos_reverse_dict[nearest[k]]
-                    log_str = '%s %s,' % (log_str, str(close_word))
-                print(log_str)
+            # sim = similarity.eval()
+            # for i in range(valid_size):
+            #     valid_pos = pos_reverse_dict[valid_examples[i]]
+            #     top_k = 8
+            #     nearest = (-sim[i, :]).argsort()[1:top_k + 1]
+            #     log_str = 'Nearest to %s:' % str(valid_pos)
+            #     for k in range(top_k):
+            #         close_word = pos_reverse_dict[nearest[k]]
+            #         log_str = '%s %s,' % (log_str, str(close_word))
+            #     print(log_str)
 
     # Save vectors
-    save_model(pos_li, pos_embeddings.eval(), "pos.vec")
+    save_model(pos_li, pos_embeddings.eval(), "청원문.vec")
 
 
 
