@@ -1,4 +1,7 @@
 # korean emotion classification with Attention
+2018년 짧은 한국어 문장을 11가지 감정으로 분류하는 모델입니다.
+
+![]()
 
 # 0. 도입부
 일일이 sns 댓글을 뒤지지 않고도 손쉽게 주변인물들이 당신을 어떻게 생각하는지를 판단할 수 있다.
