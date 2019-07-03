@@ -4,7 +4,7 @@
 ![](./전체모델.jpg)
 
 - `전체 순서`: `Konlpy` -> `word2vec` -> `Bi-lstm` -> `Attention` -> `8 emotion classify`
-
+- [`최종 결과물 확인`](https://github.com/minkj1992/Korean_emotion_classification_attention/blob/master/final_predict.ipynb)
 # 0. 도입부
 일일이 sns 댓글을 뒤지지 않고도 손쉽게 주변인물들이 당신을 어떻게 생각하는지를 판단할 수 있다.
 
